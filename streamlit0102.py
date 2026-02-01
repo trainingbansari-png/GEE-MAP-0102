@@ -92,4 +92,17 @@ if initialize_ee():
             map_id = ee.Image(img).getMapId(vis)
             
             # Result Map
-            res_map = folium.Map(location=[center_lat, center_lon], zoom_start=
+            res_map = folium.Map(location=[center_lat, center_lon], zoom_start=12)
+            folium.TileLayer(
+                tiles=map_id['tile_fetcher'].url_format,
+                attr='Google Earth Engine',
+                name='Clipped Imagery'
+            ).add_to(res_map)
+            
+            # Add the polygon outline for clarity
+            folium.GeoJson(roi_data, name="ROI Outline").add_to(res_map)
+            
+            st_folium(res_map, width=800, height=400, key="result_map")
+
+    else:
+        st.info("👆 Use the polygon tool on the map to begin.")
